@@ -40,9 +40,10 @@ function release (client, err) {
   let tid
   if (this.options.idleTimeoutMillis) {
     tid = setTimeout(() => {
-      this.log('remove idle client')
+      this.log(`remove idle client ${client.clientId} caused by timeoutId ${tid}`)
       this._remove(client)
     }, this.options.idleTimeoutMillis)
+    this.log(`Set timeoutId ${tid} for client ${client.clientId}`);
   }
 
   this._idle.push(new IdleItem(client, tid))
@@ -135,6 +136,7 @@ class Pool extends EventEmitter {
     const waiter = this._pendingQueue.shift()
     if (this._idle.length) {
       const idleItem = this._idle.pop()
+      this.log(`Clearing timeoutId ${idleItem.timeoutId} for client ${idleItem.client.clientId}`);
       clearTimeout(idleItem.timeoutId)
       const client = idleItem.client
       client.release = release.bind(this, client)
