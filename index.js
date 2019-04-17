@@ -43,7 +43,7 @@ function release (client, err) {
       this.log(`remove idle client ${client.clientId} caused by timeoutId ${tid.customId}`)
       this._remove(client)
     }, this.options.idleTimeoutMillis)
-    tid.customId = Math.random.toString();
+    tid.customId = Math.random().toString();
     this.log(`Set timeoutId ${tid.customId} for client ${client.clientId}`);
   }
 
